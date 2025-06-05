@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>XSSテスト</title>
+</head>
+<body>
+  <h1>検索結果</h1>
+  <p>あなたの検索ワード: <span id="output"></span></p>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const query = params.get("q");
+    document.getElementById("output").innerHTML = query;
+  </script>
+</body>
+</html>
