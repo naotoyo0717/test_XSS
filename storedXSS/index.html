@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>蓄積型XSSテスト</title>
+</head>
+<body>
+  <h1>コメント投稿</h1>
+
+  <form id="commentForm">
+    <label for="comment">コメント:</label><br>
+    <textarea id="comment" rows="4" cols="40"></textarea><br>
+    <button type="submit">投稿</button>
+  </form>
+
+  <h2>投稿されたコメント</h2>
+  <div id="comments"></div>
+
+  <script>
+    // コメントを表示
+    function displayComments() {
+      const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+      const container = document.getElementById("comments");
+      container.innerHTML = ""; // 初期化
+
+      comments.forEach(comment => {
+        const div = document.createElement("div");
+        div.innerHTML = comment; // ← XSS脆弱な出力（あえて）
+        container.appendChild(div);
+      });
+    }
+
+    // フォームの送信処理
+    document.getElementById("commentForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const comment = document.getElementById("comment").value;
+
+      // ローカルストレージに保存
+      const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+      comments.push(comment);
+      localStorage.setItem("comments", JSON.stringify(comments));
+
+      // 再表示
+      displayComments();
+      document.getElementById("comment").value = "";
+    });
+
+    // 初回表示時にコメントを表示
+    displayComments();
+  </script>
+</body>
+</html>
