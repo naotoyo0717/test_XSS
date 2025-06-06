@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>蓄積型XSS対策テスト</title>
+</head>
+<body>
+  <h1>蓄積型XSS(堅牢Ver)</h1>
+
+  <form id="commentForm">
+    <label for="comment">コメント:</label><br>
+    <textarea id="comment" rows="4" cols="40"></textarea><br>
+    <button type="submit">投稿</button>
+  </form>
+
+  <h2>投稿されたコメント</h2>
+  <div id="comments"></div>
+
+  <button onclick="clearLocalStorage()">
+    ローカルストレージを削除する
+  </button>
+  <br>
+  <a href="https://nao-server.org/storedXSS">
+	  脆弱Ver
+  </a>
+
+  <script>
+    // HTMLをエスケープする関数（XSS対策）
+    function escapeHTML(str) {
+      return str
+        .replace(/&/g, '&amp;')   // & → &amp;
+        .replace(/</g, '&lt;')    // < → &lt;
+        .replace(/>/g, '&gt;')    // > → &gt;
+        .replace(/"/g, '&quot;')  // " → &quot;
+        .replace(/'/g, '&#39;');  // ' → &#39;
+    }
+
+    // コメントを表示する関数
+    function displayComments() {
+      const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+      const container = document.getElementById("comments");
+      container.innerHTML = ""; // コメント一覧を初期化
+
+      comments.forEach(comment => {
+        const div = document.createElement("div");
+	console.log("エスケープ前:", comment);
+        div.innerHTML = escapeHTML(comment); // エスケープしてから表示
+	console.log("エスケープ後:", div.innerHTML);
+        container.appendChild(div);
+      });
+    }
+
+    // ローカルストレージを削除する関数
+    function clearLocalStorage() {
+      localStorage.clear();
+      alert("ローカルストレージを全て削除しました。");
+      displayComments(); // 表示もリセット
+    }
+
+    // コメント投稿時の処理
+    document.getElementById("commentForm").addEventListener("submit", function (e) {
+      e.preventDefault(); // ページリロードを防ぐ
+      const comment = document.getElementById("comment").value;
+
+      // ローカルストレージから既存のコメントを取得
+      const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+
+      // 新しいコメントを追加
+      comments.push(comment);
+
+      // 更新されたコメント一覧をローカルストレージに保存
+      localStorage.setItem("comments", JSON.stringify(comments));
+
+      // コメント表示を更新
+      displayComments();
+
+      // 入力欄をリセット
+      document.getElementById("comment").value = "";
+    });
+
+    // ページ読み込み時にコメントを表示
+    displayComments();
+  </script>
+</body>
+</html>

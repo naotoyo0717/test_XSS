@@ -5,7 +5,7 @@
   <title>蓄積型XSSテスト</title>
 </head>
 <body>
-  <h1>コメント投稿</h1>
+  <h1>蓄積型XSS(脆弱Ver)</h1>
 
   <form id="commentForm">
     <label for="comment">コメント:</label><br>
@@ -15,7 +15,13 @@
 
   <h2>投稿されたコメント</h2>
   <div id="comments"></div>
-
+  <button onclick="clearLocalStorage()">
+	  ローカルストレージを削除する
+  </button>
+  <br>
+  <a href="https://nao-server.org/storedXSS_secure">
+	  堅牢Ver
+  </a>
   <script>
     // コメントを表示
     function displayComments() {
@@ -28,6 +34,11 @@
         div.innerHTML = comment; // ← XSS脆弱な出力（あえて）
         container.appendChild(div);
       });
+    }
+
+    function clearLocalStorage() {
+      localStorage.clear();
+      alert("ローカルストレージを全て削除しました。");
     }
 
     // フォームの送信処理
@@ -47,6 +58,7 @@
 
     // 初回表示時にコメントを表示
     displayComments();
+    console.log(localStorage);
   </script>
 </body>
 </html>
