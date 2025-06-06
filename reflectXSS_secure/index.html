@@ -5,7 +5,7 @@
   <title>XSSテスト</title>
 </head>
 <body>
-  <h1>反射型XSS(堅牢バージョン)</h1>
+  <h1>反射型XSS(堅牢Ver)</h1>
 
   <form method="GET" action="index.html">
     <label for="q">検索:</label>
@@ -14,7 +14,7 @@
   </form>
   <p>検索ワード: <span id="output"></span></p>
   <a href="http://nao-server.org/reflectXSS">
-	  脆弱バージョン
+	  脆弱Ver
   </a>
   <script>
     const params = new URLSearchParams(location.search);
@@ -33,6 +33,7 @@
 	
       //エスケープ処理    
       const escaped = escapeHTML(query);
+      document.getElementById("output").innerHTML = escaped;
       console.log("エスケープ前:", query);
       console.log("エスケープ後:", escaped);
     }
