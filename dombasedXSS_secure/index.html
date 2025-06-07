@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>DOM-based XSS エスケープ処理Ver</title>
+</head>
+<body>
+  <h1>DOM-based XSS(堅牢Ver）</h1>
+  
+  <form id="xssForm">
+    <input type="text" id="userInput" placeholder="入力">
+    <button type="submit">検索</button>
+  </form>
+  <h2>検索文字列:</h2>
+  <div id="output"></div>
+  <a href="https://naoserver.org/test_XSS/dombasedXSS_vulnerable">
+	  脆弱Ver
+  </a>
+
+  <script>
+    // ユーザー入力をHTMLエスケープする関数
+    function escapeHTML(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    document.getElementById("xssForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = document.getElementById("userInput").value;
+　　　console.log("エスケープ前:",input);
+      // 明示的にエスケープしてから innerHTML に代入
+      const escapedInput = escapeHTML(input);
+      console.log("エスケープ後:",escapedInput);
+      document.getElementById("output").innerHTML = escapedInput;
+    });
+  </script>
+</body>
+</html>
+

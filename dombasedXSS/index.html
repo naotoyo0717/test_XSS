@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>DOM-based XSS 再現</title>
+</head>
+<body>
+  <h1>DOM-based XSS(脆弱Ver)</h1>
+  
+  <form id="xssForm">
+    <input type="text" id="userInput" placeholder="入力">
+    <button type="submit">検索</button>
+  </form>
+  <h2>検索文字列:</h2>
+  <div id="output"></div>
+  <a href="https://nao-server.org/test_XSS/dombasedXSS_secure">
+	  堅牢Ver
+  </a>
+
+  <script>
+    document.getElementById("xssForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = document.getElementById("userInput").value;
+      
+      // 脆弱コード
+      document.getElementById("output").innerHTML = input;
+    });
+  </script>
+</body>
+</html>
