@@ -1,6 +1,6 @@
 # test_XSS
 クロスサイトスクリプティングを体験することができます。
-VPN接続し、https://nao-server.org/test_XSSにアクセスしてください。
+VPN接続し、https://nao-server.org/test_XSS にアクセスしてください。
 
 ## このプロジェクトについて
 
